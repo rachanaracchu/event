@@ -1,37 +1,32 @@
 package com.event.management.model;
 
-import java.time.LocalDate;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "events")
+@Table(name = "event")
 public class Event {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
     private String type;
-    private String location;
-    private LocalDate date;
-    private double price;
 
-    // Constructors
-    public Event() {}
-    
-    public Event(String name, String type, String location, LocalDate date, double price) {
-        this.name = name;
-        this.type = type;
-        this.location = location;
-        this.date = date;
-        this.price = price;
-    }
+    @Column(name="marriage_type")
+    private String marriageType;
+
+    @Column(name="birthday_theme")
+    private String birthdayTheme;
+
+    @Column(name="college_type")
+    private String collegeType;
+
+    @Column(name="corporate_type")
+    private String corporateType;
+
+    private String date;
+    private String location;
+    private Double price;
 
     // Getters & Setters
     public Long getId() { return id; }
@@ -43,12 +38,24 @@ public class Event {
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
 
+    public String getMarriageType() { return marriageType; }
+    public void setMarriageType(String marriageType) { this.marriageType = marriageType; }
+
+    public String getBirthdayTheme() { return birthdayTheme; }
+    public void setBirthdayTheme(String birthdayTheme) { this.birthdayTheme = birthdayTheme; }
+
+    public String getCollegeType() { return collegeType; }
+    public void setCollegeType(String collegeType) { this.collegeType = collegeType; }
+
+    public String getCorporateType() { return corporateType; }
+    public void setCorporateType(String corporateType) { this.corporateType = corporateType; }
+
+    public String getDate() { return date; }
+    public void setDate(String date) { this.date = date; }
+
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
 
-    public LocalDate getDate() { return date; }
-    public void setDate(LocalDate date) { this.date = date; }
-
-    public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
+    public Double getPrice() { return price; }
+    public void setPrice(Double price) { this.price = price; }
 }

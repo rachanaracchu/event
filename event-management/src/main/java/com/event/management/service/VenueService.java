@@ -14,23 +14,7 @@ public class VenueService {
     @Autowired
     private VenueRepository venueRepository;
 
-    public Venue addVenue(Venue venue) {
-        return venueRepository.save(venue);
-    }
-
     public List<Venue> getAllVenues() {
         return venueRepository.findAll();
-    }
-
-    public List<Venue> getVenuesByLocation(String location) {
-        return venueRepository.findByLocation(location);
-    }
-
-    public void deleteVenue(Long id) {
-        venueRepository.deleteById(id);
-    }
-
-    public Venue updateVenue(Venue venue) {
-        return venueRepository.save(venue);
     }
 }

@@ -1,13 +1,11 @@
 package com.event.management.repository;
 
-import com.event.management.model.Event;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
+import com.event.management.model.Event;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
-    // Use the actual field name in Event entity (here it's "type")
-    List<Event> findByType(String type);
+    List<Event> findByTypeIgnoreCase(String type);
 }

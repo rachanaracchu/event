@@ -1,43 +1,34 @@
 package com.event.management.controller;
 
-import com.event.management.model.Admin;
-import com.event.management.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import com.event.management.model.Admin;
+import com.event.management.service.AdminService;
 
 @RestController
-@RequestMapping("/admins")
+@RequestMapping("/api/admin")
+@CrossOrigin(origins = "*")
 public class AdminController {
 
     @Autowired
     private AdminService adminService;
 
-    @PostMapping("/add")
-    public Admin addAdmin(@RequestBody Admin admin) {
-        return adminService.saveAdmin(admin);
+    @PostMapping("/register")
+    public String register(@RequestBody Admin admin) {
+        if (adminService.getByUsername(admin.getUsername()) != null) {
+            return "Username already exists!";
+        }
+        adminService.registerAdmin(admin.getUsername(), admin.getPassword());
+        return "Admin registered successfully!";
     }
 
-    @GetMapping("/all")
-    public List<Admin> getAllAdmins() {
-        return adminService.getAllAdmins();
-    }
-
-    @GetMapping("/{id}")
-    public Optional<Admin> getAdminById(@PathVariable Long id) {
-        return adminService.getAdminById(id);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public String deleteAdmin(@PathVariable Long id) {
-        adminService.deleteAdmin(id);
-        return "Admin deleted with id: " + id;
-    }
-
-    @GetMapping("/email/{email}")
-    public Optional<Admin> getAdminByEmail(@PathVariable String email) {
-        return adminService.getAdminByEmail(email);
+    @PostMapping("/login")
+    public String login(@RequestBody Admin admin) {
+        boolean authenticated = adminService.authenticate(admin.getUsername(), admin.getPassword());
+        if (authenticated) {
+            return "Login successful!";
+        }
+        return "Invalid username or password!";
     }
 }

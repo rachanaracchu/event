@@ -1,12 +1,13 @@
 package com.event.management.service;
 
-import com.event.management.model.Admin;
-import com.event.management.repository.AdminRepository;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import com.event.management.model.Admin;
+import com.event.management.repository.AdminRepository;
 
 @Service
 public class AdminService {
@@ -14,23 +15,28 @@ public class AdminService {
     @Autowired
     private AdminRepository adminRepository;
 
-    public Admin saveAdmin(Admin admin) {
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    // Register new admin
+    public Admin registerAdmin(String username, String password) {
+        String hashedPassword = passwordEncoder.encode(password);
+        Admin admin = new Admin(username, hashedPassword);
         return adminRepository.save(admin);
     }
 
-    public List<Admin> getAllAdmins() {
-        return adminRepository.findAll();
+    // Authenticate admin login
+    public boolean authenticate(String username, String password) {
+        Optional<Admin> adminOpt = adminRepository.findByUsername(username);
+        if (adminOpt.isPresent()) {
+            Admin admin = adminOpt.get(); // ✅ safe after isPresent check
+            return passwordEncoder.matches(password, admin.getPassword());
+        }
+        return false;
     }
 
-    public Optional<Admin> getAdminById(Long id) {
-        return adminRepository.findById(id);
-    }
-
-    public void deleteAdmin(Long id) {
-        adminRepository.deleteById(id);
-    }
-
-    public Optional<Admin> getAdminByEmail(String email) {
-        return adminRepository.findByEmail(email);
+    // Get admin by username
+    public Admin getByUsername(String username) {
+        Optional<Admin> adminOpt = adminRepository.findByUsername(username);
+        return adminOpt.orElse(null); // ✅ safe and standard
     }
 }

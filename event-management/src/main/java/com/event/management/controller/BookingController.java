@@ -1,43 +1,29 @@
 package com.event.management.controller;
 
-import java.util.List;
-
+import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import com.event.management.model.Booking;
+import com.event.management.repository.BookingRepository;
 
 @RestController
 @RequestMapping("/api/bookings")
+@CrossOrigin(origins = "*")
 public class BookingController {
 
     @Autowired
-    private BookingService bookingService;
+    private BookingRepository bookingRepository;
 
-    @PostMapping("/add")
+    @PostMapping
     public Booking addBooking(@RequestBody Booking booking) {
-        return bookingService.addBooking(booking);
+        if (booking.getBookingDate() == null) {
+            booking.setBookingDate(LocalDate.now());
+        }
+        return bookingRepository.save(booking);
     }
 
-    @GetMapping("/all")
-    public List<Booking> getAllBookings() {
-        return bookingService.getAllBookings();
-    }
-
-    @GetMapping("/user/{email}")
-    public List<Booking> getBookingsByUserEmail(@PathVariable String email) {
-        return bookingService.getBookingsByUserEmail(email);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public String deleteBooking(@PathVariable Long id) {
-        bookingService.deleteBooking(id);
-        return "Booking deleted with ID: " + id;
+    @GetMapping
+    public java.util.List<Booking> getAllBookings() {
+        return bookingRepository.findAll();
     }
 }
